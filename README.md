@@ -5,3 +5,5 @@ This sudoku solver uses a simple depth-first search with backtracking method to 
 ## How to use:
 * Write the sudoku you want to solve line-by-line, without spaces, with the empty cells marked by a '.' (*period*) in **input.txt**.
 * Run the command `python3 main.py` to obtain the solved sudoku in your terminal :)
+
+**Footnote:** Certain sudokus are not solvable by this method, therefore, they will be marked as **Not Solvable** :(
