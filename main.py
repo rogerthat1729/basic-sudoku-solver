@@ -54,6 +54,7 @@ def solve_dfs(puzzle, i=0, j=0):
             if solve_dfs(puzzle, i, j + 1):
                 return True
             puzzle[i][j] = 0 
+            
     return False 
 
 
@@ -77,5 +78,7 @@ def txt_to_puzzle(filename):
     return puzzle
 
 puzzle = txt_to_puzzle('input.txt')
-solve_dfs(puzzle)
-print_puzzle(puzzle)
+if solve_dfs(puzzle):
+    print_puzzle(puzzle)
+else:
+    print('Not solvable by this method')
