@@ -40,26 +40,22 @@ def check_possible(puzzle, i, j):
     m = [p for p in possible if p not in l]
     return m
 
-def solve_once(puzzle):
-    possible_vals = [[[] for _ in range(9)] for __ in range(9)]
-    cnt = 0
-    for i in range(9):
-        for j in range(9):
-            if puzzle[i][j]==0:
-                cnt += 1
-                possible_vals[i][j] = check_possible(puzzle, i, j)
-    for i in range(9):
-        for j in range(9):
-            if len(possible_vals[i][j])==1:
-                cnt += 1
-                puzzle[i][j] = possible_vals[i][j][0]
-    return (puzzle, cnt)
+def solve_dfs(puzzle, i=0, j=0):
+    if i == 9:  
+        return True
+    if j == 9: 
+        return solve_dfs(puzzle, i + 1, 0)
+    if puzzle[i][j] != 0: 
+        return solve_dfs(puzzle, i, j + 1)
 
-def solve(puzzle):
-    cnt = 81
-    while cnt>0:
-        puzzle, cnt = solve_once(puzzle)
-    return puzzle
+    for number in range(1, 10): 
+        if number in check_possible(puzzle, i, j): 
+            puzzle[i][j] = number
+            if solve_dfs(puzzle, i, j + 1):
+                return True
+            puzzle[i][j] = 0 
+    return False 
+
 
 def print_puzzle(puzzle):
     for i in range(9):
@@ -67,15 +63,19 @@ def print_puzzle(puzzle):
             print(puzzle[i][j], end=' ')
         print()
 
-puzzle = [[0, 2, 9, 0, 0, 5, 1, 7, 0],
-          [0, 5, 8, 0, 2, 6, 9, 0, 3],
-          [3, 0, 0, 0, 0, 0, 6, 0, 2],
-          [0, 0, 0, 4, 7, 9, 0, 0, 1],
-          [4, 0, 0, 1, 6, 0, 0, 0, 0],
-          [9, 0, 0, 5, 0, 8, 4, 0, 0],
-          [8, 0, 0, 9, 0, 0, 0, 2, 4],
-          [0, 4, 3, 0, 0, 7, 0, 1, 0],
-          [0, 0, 0, 0, 5, 4, 3, 8, 6]]
+def txt_to_puzzle(filename):
+    puzzle = []
+    with open(filename, 'r') as f:
+        for line in f:
+            l = []
+            for ch in line:
+                if ch.isdigit():
+                    l.append(int(ch))
+                elif ch == '.':
+                    l.append(0)
+            puzzle.append(l)
+    return puzzle
 
-print_puzzle(solve(puzzle))
-                
+puzzle = txt_to_puzzle('input.txt')
+solve_dfs(puzzle)
+print_puzzle(puzzle)
